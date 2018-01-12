@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block head_title %}
+{{ title }} | {{ block.super }}
+{% endblock head_title %}
+
+
+ {% block post_detail_link %}
+  <li><a href='{{ instance.get_absolute_url }}'>{{ instance.user.get_full_name }}</a></li>
+ {% endblock %}
+
+{% block content %}
+<div class='col-sm-6 col-sm-offset-3'>
+<!--href='{{ instance.get_like_url }}'-->
+<p><a class='like-btn' data-href='{{ instance.get_api_likeunlike_url }}' data-likes='{{ instance.like_set.count }}' >{% if is_liked %}UnLike{% else %} Like {% endif %}</a>
+<!--{% if instance.like_set.count > 0 %}-->
+<a class='liked_count' href='#'>{{ instance.like_set.count }}</a>
+<!--{% endif %}-->
+</p>
+
+{% if instance.user.get_full_name %}
+<p>{{ instance.user.get_full_name }}</p>
+{% endif %}
+{% if instance.timestamp %}
+<p>{{ instance.timestamp }}</p>
+{% endif %}
+
+<hr>
+<div class='row'>
+<div class='col-sm-12 '>
+
+    <div class='post-detail-item'>
+        {{ instance.content|safe }}
+     </div>
+
+    <hr/>
+    <br/>
+</div>
+</div>
+</p>
+
+</div>
+
+
+{% endblock content %}

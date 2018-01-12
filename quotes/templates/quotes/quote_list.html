@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class='col-sm-8 col-sm-offset-2'>
+    <h1><a href='{% url 'quotes:list' %}'>{{ title }}</a></h1>
+<form method='GET' action='' class='row'>
+        <div class='col-sm-6'>
+            <div class='input-group'>
+                <input class='form-control' type='text' name='q' placeholder='Search quotes' value='{{ request.GET.q }}'/>
+                <span class='input-group-btn'>
+                    <!-- <input class='btn btn-default' type='submit' value='Search' /> -->
+                    <button class='btn btn-default' type='submit'>Search <i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </div>
+</form>
+<hr>
+{% for obj,is_liked in object_list %}
+<div class="row">
+  <div class="col-sm-12">
+    <div class="thumbnail">
+      <div class="caption post-detail-item">
+        <h4><a href='{% url 'quotes:list_user' obj.user.get_username%}'>{{ obj.user.get_full_name }}</h4>
+        </a> <small>{{ obj.timestamp }}</small>
+        
+        <h2 style="word-wrap: break-word;">{{ obj.content|truncatechars:100|linebreaks }}
+            {% ifnotequal obj.content obj.content|truncatechars:100 %}
+            <small><a class="readmore" href="{{obj.get_absolute_url }}">read more...</a>
+            {% endifnotequal %}</small></h2>
+        <!--<p><a href="{{ obj.get_absolute_url }}" class="btn btn-primary" role="button">View</a></p>-->
+        <p><h4><a class='like-btn' data-href='{{ obj.get_api_likeunlike_url }}' data-id='{{obj.id}}'>{% if is_liked %}<i class="fa fa-thumbs-up" style="font-size:24px;color:#337ab7" aria-hidden="true">&nbsp</i>Like{% else %} <i class="fa fa-thumbs-o-up" style="font-size:24px" aria-hidden="true">&nbsp</i>Like{% endif %}</a>
+        <a class='liked_count{{obj.id}}'>{{ obj.like_set.count }}</a></h>
+        </p>
+      </div>
+    </div>
+  </div>
+<hr/>
+</div>
+{% endfor %}
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if object_list.has_previous %}
+            <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+        </span>
+
+        {% if object_list.has_next %}
+            <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+
+
+
+</div>
+
+{% endblock content %}

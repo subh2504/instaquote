@@ -22,15 +22,19 @@ from .utils import get_read_time, unique_slug_generator
 class PostManager(models.Manager):
     def active(self, *args, **kwargs):
         qs = self.get_queryset().filter(
-                            active=True
+                            draft=False,
+                            publish__lte=timezone.now()
                             )
         return qs
 
-# p = Picture.objects.get(...)
-# number_of_likes = p.like_set.all().count()
+
+def upload_location(instance, filename):
+    PostModel = instance.__class__
+    new_id = PostModel.objects.order_by("id").last().id + 1
+    return "%s/%s" %(new_id, filename)
 
 class Post(models.Model):
-    user            = models.ForeignKey(User,on_delete=models.CASCADE)
+    user            = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     content         = models.TextField()
     active           = models.BooleanField(default=True)
     updated         = models.DateTimeField(auto_now=True, auto_now_add=False)
@@ -54,7 +58,7 @@ class Post(models.Model):
     def get_like_url(self):
         return reverse("quotes:like-toggle", kwargs={"pk": self.pk})
 
-    def get_api_likeunlike_url(self):
+    def get_api_likeun_url(self):
         return reverse("quotes:like-api-toggle", kwargs={"pk": self.pk})
     
     class Meta:
@@ -65,22 +69,10 @@ class Post(models.Model):
         instance = self
         content_type = ContentType.objects.get_for_model(instance.__class__)
         return content_type
-        
-class Like(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    post = models.ForeignKey(Post,on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        ordering = ["-created"]
-        unique_together = (("user", "post"),)
-        
-    def __str__(self):
-        return str(self.user.id)+ " "+str(self.post)
+
 
 
 def pre_save_post_receiver(sender, instance, *args, **kwargs):
-    pass
     # if not instance.slug:
     #     instance.slug = unique_slug_generator(instance)
 

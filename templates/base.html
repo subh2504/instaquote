@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Django Likes</title>
+
+    {% include 'base/css.html' %}
+    {% include 'base/bootstrap_defaults.html' %}
+  </head>
+  <body>
+    <div class='container'>
+    {% block content %}
+    {% endblock content %}
+    </div>
+    {% include 'base/js.html' %}
+
+    <script>
+     $(document).ready(function(){
+          function updateText(btn, verb){
+          btn.text(verb)
+          
+      }
+
+      $(".like-btn").click(function(e){
+        e.preventDefault()
+        var this_ = $(this)
+        var likeUrl = this_.attr("data-href")
+        var id = this_.attr("data-id")
+        var element =this_.find('i:first');
+        //var likeCount = parseInt(this_.attr("data-likes")) | 0
+        //var addLike = likeCount + 1
+        //var removeLike = likeCount - 1
+        if (likeUrl){
+           $.ajax({
+            url: likeUrl,
+            method: "GET",
+            data: {},
+            success: function(data){
+              console.log(data)
+              // var newLikes;
+              if (data.liked){
+                  
+                  $(".liked_count"+id).text(data.count)
+                  element.removeClass( "fa fa-thumbs-o-up" ).addClass( "fa fa-thumbs-up" )
+                  element.css({'color':'#337ab7'})
+              } else {
+                  $(".liked_count"+id).text(data.count)
+                  element.removeClass( "fa fa-thumbs-up" ).addClass( "fa fa-thumbs-o-up" )
+                  element.css({'color':''})
+                  // remove one like
+              }
+
+            }, error: function(error){
+              console.log(error)
+              console.log("error")
+            }
+          })
+        }
+       
+      })
+  })
+
+    </script>
+    <script>
+    $(document).ready(function(){
+      {% block jquery %}{% endblock %}
+    })
+    </script>
+  </body>
+</html>
