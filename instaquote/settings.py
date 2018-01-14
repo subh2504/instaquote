@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'quotes',
     'accounts',
-    'bootstrap3',ç
+    'bootstrap3',
 ]
 
 MIDDLEWARE = [
