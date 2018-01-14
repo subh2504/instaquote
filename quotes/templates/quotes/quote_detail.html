@@ -1,47 +1,42 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-
-
-{% block head_title %}
-{{ title }} | {{ block.super }}
-{% endblock head_title %}
-
-
- {% block post_detail_link %}
-  <li><a href='{{ instance.get_absolute_url }}'>{{ instance.user.get_full_name }}</a></li>
- {% endblock %}
-
 {% block content %}
-<div class='col-sm-6 col-sm-offset-3'>
-<!--href='{{ instance.get_like_url }}'-->
-<p><a class='like-btn' data-href='{{ instance.get_api_likeunlike_url }}' data-likes='{{ instance.like_set.count }}' >{% if is_liked %}UnLike{% else %} Like {% endif %}</a>
-<!--{% if instance.like_set.count > 0 %}-->
-<a class='liked_count' href='#'>{{ instance.like_set.count }}</a>
-<!--{% endif %}-->
-</p>
 
-{% if instance.user.get_full_name %}
-<p>{{ instance.user.get_full_name }}</p>
-{% endif %}
-{% if instance.timestamp %}
-<p>{{ instance.timestamp }}</p>
-{% endif %}
 
+<div class='col-sm-8 col-sm-offset-2'>
+    
+<br>
+{% if not request.user.is_authenticated %}
+
+<h4> Please <a href="{% url 'login' %}?next={{ request.path }}">Login</a> to share and like Quotes</h4>
+{% endif %}
+<div class="row">
+  <div class="col-sm-12">
+    <div class="thumbnail">
+      <div class="caption post-detail-item">
+        <h4><a href='{% url 'quotes:list_user' instance.user.get_username %}'>{{ instance.user.get_full_name }}</h4>
+        </a> <small>{{ instance.timestamp }}</small>
+        
+        <h2 style="word-wrap: break-word;">{{ instance.content|linebreaks }}
+            
+        <!--<p><a href="{{ obj.get_absolute_url }}" class="btn btn-primary" role="button">View</a></p>-->
+        {% if request.user.is_authenticated %}
+        <p><h4><a class='like-btn' data-href='{{ instance.get_api_likeunlike_url }}' data-id='{{instance.id}}'>{% if is_liked %}<i class="fa fa-thumbs-up" style="font-size:24px;color:#337ab7" aria-hidden="true">&nbsp</i>Like{% else %} <i class="fa fa-thumbs-o-up" style="font-size:24px" aria-hidden="true">&nbsp</i>Like{% endif %}</a>
+         <a data-id='{{instance.id}}' class='liked_count liked_count{{instance.id}}'>{{ instance.like_set.count }}</a></h4>
+        </p>
+        {% else %}
+        <p><h4><a style="pointer-events: none;cursor: default;" class='like-btn' data-href='{{ instance.get_api_likeunlike_url }}' data-id='{{obj.id}}'>{% if is_liked %}<i class="fa fa-thumbs-up" style="font-size:24px;color:#337ab7" aria-hidden="true">&nbsp</i>Like{% else %} <i class="fa fa-thumbs-o-up" style="font-size:24px" aria-hidden="true">&nbsp</i>Like{% endif %}</a>
+         <a data-id='{{instance.id}}' class='liked_count liked_count{{instance.id}}'>{{ instance.like_set.count }}</a></h4>
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 <hr>
-<div class='row'>
-<div class='col-sm-12 '>
-
-    <div class='post-detail-item'>
-        {{ instance.content|safe }}
-     </div>
-
-    <hr/>
-    <br/>
-</div>
-</div>
-</p>
-
 </div>
 
+
+
+</div>
 
 {% endblock content %}

@@ -9,3 +9,11 @@ class PostForm(forms.ModelForm):
         fields = [
             "content",
         ]
+        labels = {
+            'content': '',
+        }
+        widgets = {
+            'content': forms.Textarea(attrs={'onkeyup':'new do_resize(this)' ,'rows':'1','placeholder': 'Share your quotes', 'class': 'textarea_q form-control'})
+            
+        }
+            

@@ -3,3 +3,176 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+ 
+ 
+ <script>
+     $(document).ready(function(){
+      
+      $(document).on("keydown", function(e) {
+    if (e.which === 13 && !$(e.target).is("textarea")) {
+      e.preventDefault();
+      console.log("ENTER PREVENTED");
+      return;
+    }
+  });
+      
+          function updateText(btn, verb){
+          btn.text(verb)
+          
+      }
+      
+       
+      $(".like-btn").click(function(e){
+        e.preventDefault()
+        var this_ = $(this)
+        var likeUrl = this_.attr("data-href")
+        var id = this_.attr("data-id")
+        var element =this_.find('i:first');
+        //var likeCount = parseInt(this_.attr("data-likes")) | 0
+        //var addLike = likeCount + 1
+        //var removeLike = likeCount - 1
+        if (likeUrl){
+           $.ajax({
+            url: likeUrl,
+            method: "GET",
+            data: {},
+            success: function(data){
+              console.log(data)
+              // var newLikes;
+              if (data.liked){
+                  
+                  $(".liked_count"+id).text(data.count)
+                  element.removeClass( "fa fa-thumbs-o-up" ).addClass( "fa fa-thumbs-up" )
+                  element.css({'color':'#337ab7'})
+              } else {
+                  $(".liked_count"+id).text(data.count)
+                  element.removeClass( "fa fa-thumbs-up" ).addClass( "fa fa-thumbs-o-up" )
+                  element.css({'color':''})
+                  // remove one like
+              }
+
+            }, error: function(error){
+              console.log(error)
+              console.log("error")
+            }
+          })
+        }
+       
+      })
+  });
+  
+  
+  //no of likes 
+  
+   $(".liked_count").click(function(e){
+     var infoModal = $('#myModal');
+        var this_ = $(this)
+        var likeUrl = this_.attr("data-href")
+        var id = this_.attr("data-id")
+        //alert(likeUrl)
+     $.ajax({
+       
+        type: "GET",
+        url: '/api/'+id+'/likedby/',
+        data:{},
+        success: function(data){
+          //alert(data)
+            var item = data;
+            var htmlData = '<ul style="list-style: none;">';
+            $.each(item.liked_by,function(index,value){ 
+                //alert(index + " : " + value.name);
+                htmlData+='<li><h4><a target="_blank" href="'+value.url+'">'+value.name+"</a></h4></li>"
+            }); 
+            //alert(item.likedby);
+            //});
+              
+            
+            htmlData += '</ul>';
+            infoModal.find('.modal-title').text(item.count+" Likes")
+            infoModal.find('.modal-body').html(htmlData);
+            infoModal.modal('show');
+        },error: function(error){
+              console.log(error)
+              console.log("error")
+        }
+    });
+    
+   });
+   
+// $(".delete-btn").click(function(e){
+//         e.preventDefault()
+//         var this_ = $(this)
+//           var id = this_.attr("data-id")
+//             $.ajax({
+//             type: "GET",
+             
+//             url: '/'+id+'/delete/',
+//               success:function(response) {
+//               location.reload(true);
+
+//               //do something with 'response'
+//             }
+//             })
+// });
+ 
+// $(".deactivate-btn").click(function(e){
+//         e.preventDefault()
+//         var this_ = $(this)
+//           var id = this_.attr("data-id")
+//             $.ajax({
+//             type: "GET",
+             
+//             url: '/'+id+'/deactivate/',
+//               success:function(response) {
+//               location.reload(true);
+
+//               //do something with 'response'
+//             }
+//             })
+// });
+
+$(".textarea_q").focus(function(){
+  
+
+  
+  $(".quote_btn").show();
+})
+    .focusout(function(){
+      //alert($(".textarea_q").val().trim().length)
+      if($(".textarea_q").val().length < 1)
+      {
+        this.rows=1
+        $(".quote_btn").hide();
+      }
+       
+    });
+  // $.ajax({
+  //       type: "GET",
+  //       url: '/api/menu-item/'+$(this).data('id'),
+  //       dataType: 'json',
+  //       success: function(data){
+  //           var item = JSON.parse(data);
+  //           var htmlData = '<ul><li>';
+  //           htmlData += item.name;
+  //           htmlData += '</li></ul>';
+  //           infoModal.find('#modal-body').innerHTML = htmlData;
+  //       }
+  //   });
+  //   infoModal.modal();
+function do_resize(textbox) {
+
+    var txt=textbox.value;
+    var cols=textbox.cols;
+  
+   var arraytxt=txt.split('\n');
+    var rows=arraytxt.length; 
+  
+   for (i=0;i<arraytxt.length;i++) 
+    rows+=parseInt(arraytxt[i].length/cols);
+  
+   textbox.rows=rows;
+   
+ }
+    
+    </script>

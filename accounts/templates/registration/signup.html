@@ -6,14 +6,17 @@
 {% endblock head_extra %}
 {% block content %}
 
-<div class='col-sm-6 col-sm-offset-3'>
+<div class='col-sm-8 col-sm-offset-2'>
     
 <h2>Sign Up</h2>
 <hr>
 <form method="post">
   {% csrf_token %}
   {{ form|crispy }}
-  <button type="submit">Signup</button>
+  <div class="form-group"></div>
+  <input type='submit' class='btn btn-success btn-md' value='Login' />
+  <h4>Already Registered? <a href='{% url 'login' %}'> Login</a>.</h4>
+
 </form>
 </div>
 {% endblock content %}

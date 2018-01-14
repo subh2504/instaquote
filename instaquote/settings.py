@@ -84,8 +84,8 @@ DATABASES = {
     }
 }
 
-LOGIN_REDIRECT_URL = 'list'
-LOGOUT_REDIRECT_URL = 'list'
+LOGIN_REDIRECT_URL = 'quotes:list'
+LOGOUT_REDIRECT_URL = 'quotes:list'
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
