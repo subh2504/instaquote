@@ -289,7 +289,7 @@ def post_deactivate(request, pk=None):
     print("*")
     print(request.META)
     print(str(instance.user == user))
-    if not request.user.is_staff or not request.user.is_superuser and not instance.user == user:
+    if not request.user.is_superuser and not instance.user == user:
         raise Http404
     if instance.active:
         instance.active=False
