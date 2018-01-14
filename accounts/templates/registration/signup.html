@@ -1,9 +1,6 @@
 <!-- templates/signup.html -->
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
-
-{% block head_extra %} 
-{% endblock head_extra %}
+{% load bootstrap3 %}
 {% block content %}
 
 <div class='col-sm-8 col-sm-offset-2'>
@@ -12,9 +9,9 @@
 <hr>
 <form method="post">
   {% csrf_token %}
-  {{ form|crispy }}
+  {% bootstrap_form form %}
   <div class="form-group"></div>
-  <input type='submit' class='btn btn-success btn-md' value='Login' />
+  <input type='submit' class='btn btn-success btn-md' value='Register' />
   <h4>Already Registered? <a href='{% url 'login' %}'> Login</a>.</h4>
 
 </form>
